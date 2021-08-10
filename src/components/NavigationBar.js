@@ -20,6 +20,15 @@ export default function NavigationBar() {
     setShowLoginModal(false);
   };
 
+  const handleLoginSuccess = (userData) => {
+    setUser(userData);
+    handleCloseLoginModal();
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+  };
+
   return (
     <>
       <Navbar bg="light" expand="lg">
@@ -38,7 +47,7 @@ export default function NavigationBar() {
                     Mi cuenta
                   </NavDropdown.Item>
                   <NavDropdown.Divider />
-                  <NavDropdown.Item href="#action/3.4">
+                  <NavDropdown.Item onClick={handleLogout}>
                     Cerrar sesión
                   </NavDropdown.Item>
                 </NavDropdown>
@@ -50,7 +59,11 @@ export default function NavigationBar() {
         </Navbar.Collapse>
       </Navbar>
 
-      <LoginModal show={showLoginModal} onHide={handleCloseLoginModal} />
+      <LoginModal
+        show={showLoginModal}
+        onHide={handleCloseLoginModal}
+        onLoginSuccess={handleLoginSuccess}
+      />
     </>
   );
 }

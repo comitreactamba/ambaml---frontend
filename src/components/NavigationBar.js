@@ -7,6 +7,8 @@ import Button from 'react-bootstrap/Button';
 
 import LoginModal from './LoginModal';
 
+import { Link } from 'react-router-dom';
+
 export default function NavigationBar() {
   const [user, setUser] = useState(null);
 
@@ -32,15 +34,21 @@ export default function NavigationBar() {
   return (
     <>
       <Navbar bg="light" expand="lg">
-        <Navbar.Brand href="#home">AmbaML</Navbar.Brand>
+        <Link to="/">
+          <Navbar.Brand>AmbaML</Navbar.Brand>
+        </Link>
 
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ml-auto">
             {user ? (
               <>
-                <Nav.Link href="#home">Mis publicaciones</Nav.Link>
-                <Nav.Link href="#link">Favoritos</Nav.Link>
+                <Link className="nav-link" to="/mispubs">
+                  Mis publicaciones
+                </Link>
+                <Link className="nav-link" to="/favoritos">
+                  Favoritos
+                </Link>
 
                 <NavDropdown title={user} alignRight>
                   <NavDropdown.Item href="#action/3.1">

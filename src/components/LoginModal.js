@@ -30,6 +30,7 @@ export default function LoginModal({ show, onHide, onLoginSuccess }) {
       method: 'POST',
       body: JSON.stringify(loginUser),
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
     });
 
     const dataJson = await response.json();

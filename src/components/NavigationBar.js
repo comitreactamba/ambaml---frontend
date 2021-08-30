@@ -5,32 +5,13 @@ import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Button from 'react-bootstrap/Button';
 
-import LoginModal from './LoginModal';
-
 import { Link } from 'react-router-dom';
 
-export default function NavigationBar() {
-  const [user, setUser] = useState(null);
-
-  const [showLoginModal, setShowLoginModal] = useState(false);
-
-  const handleLoginClick = () => {
-    setShowLoginModal(true);
-  };
-
-  const handleCloseLoginModal = () => {
-    setShowLoginModal(false);
-  };
-
-  const handleLoginSuccess = (userData) => {
-    setUser(userData);
-    handleCloseLoginModal();
-  };
-
-  const handleLogout = () => {
-    setUser(null);
-  };
-
+export default function NavigationBar({
+  user,
+  handleLogout,
+  handleLoginClick,
+}) {
   return (
     <>
       <Navbar bg="light" expand="lg">
@@ -66,12 +47,6 @@ export default function NavigationBar() {
           </Nav>
         </Navbar.Collapse>
       </Navbar>
-
-      <LoginModal
-        show={showLoginModal}
-        onHide={handleCloseLoginModal}
-        onLoginSuccess={handleLoginSuccess}
-      />
     </>
   );
 }

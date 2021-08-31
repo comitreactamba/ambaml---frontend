@@ -4,7 +4,9 @@ import NavBarMisPublicaciones from './NavBarMisPublicaciones';
 import PubCard from './PubCard';
 import PubEditorModal from './PubEditorModal';
 
-export default function PubList({ mode }) {
+import Swal from 'sweetalert2';
+
+export default function PubList({ mode, user }) {
   const [publicaciones, setPublicaciones] = useState([]);
   const [showPubEditorModal, setShowPubEditorModal] = useState(false);
 
@@ -19,6 +21,8 @@ export default function PubList({ mode }) {
 
     if (mode === 'mispubs') {
       url = 'http://localhost:8000/publicaciones/mispublicaciones';
+    } else if (mode === 'favs') {
+      url = 'http://localhost:8000/favoritos';
     }
 
     const response = await fetch(url, {
@@ -35,12 +39,58 @@ export default function PubList({ mode }) {
     setShowPubEditorModal(true);
   };
 
+  const handleDeleteClick = (id) => {
+    Swal.fire({
+      title: '¿Confirma que desea eliminar la publicación?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Aceptar',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      console.log(result);
+      if (result.value) {
+        const url = `http://localhost:8000/publicaciones/${id}`;
+
+        fetch(url, { method: 'DELETE', credentials: 'include' }).then(
+          async (response) => {
+            const data = await response.json();
+
+            if (response.status === 200) {
+              getPubs();
+              Swal.fire({
+                text: data.message,
+                icon: 'success',
+              });
+            } else {
+              Swal.fire({
+                text: data.message,
+                icon: 'error',
+              });
+            }
+          }
+        );
+      }
+    });
+  };
+
+  const handleChangeFavStatus = (pubId, isFav) => {
+    if (isFav) {
+      alert('Eliminar el favorito ' + pubId);
+    } else {
+      alert('Agregar a favoritos ' + pubId);
+    }
+  };
+
   const getCards = () => {
     const cards = publicaciones.map((publicacion) => (
       <PubCard
         publicacion={publicacion}
         mode={mode}
         onEditClick={handleEditClick}
+        onDeleteClick={handleDeleteClick}
+        user={user}
+        isFav={true}
+        onChangeFavStatus={handleChangeFavStatus}
       />
     ));
 
@@ -73,6 +123,7 @@ export default function PubList({ mode }) {
         show={showPubEditorModal}
         handleHide={handleHidePubEditorModal}
         pubId={pubId}
+        handleListRefresh={getPubs}
       />
     </>
   );

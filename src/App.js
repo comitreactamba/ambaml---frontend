@@ -69,15 +69,15 @@ function App() {
 
       <Switch>
         <Route exact path="/">
-          <PubList mode="all" />
+          <PubList mode="all" user={user} />
         </Route>
 
         <Route path="/favoritos">
-          <PubList mode="favs" />
+          <PubList mode="favs" user={user} />
         </Route>
 
         <Route path="/mispubs">
-          <PubList mode="mispubs" />
+          <PubList mode="mispubs" user={user} />
         </Route>
 
         <Route path="/detail/:id">

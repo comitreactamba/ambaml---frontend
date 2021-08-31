@@ -10,7 +10,18 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
-export default function PubCard({ publicacion, mode, onEditClick }) {
+import iconoFavorito from '../assets/icons/favorito.png';
+import iconoNoFavorito from '../assets/icons/no_favorito.png';
+
+export default function PubCard({
+  publicacion,
+  mode,
+  onEditClick,
+  onDeleteClick,
+  user,
+  onChangeFavStatus,
+  isFav,
+}) {
   const imageUrl = `http://localhost:8000/images/${publicacion.imagen}`;
 
   const cardImageStyle = {
@@ -23,10 +34,31 @@ export default function PubCard({ publicacion, mode, onEditClick }) {
     onEditClick(publicacion.id);
   };
 
+  const handleDeleteClick = (event) => {
+    event.preventDefault();
+    onDeleteClick(publicacion.id);
+  };
+
+  const handleFavClick = (event) => {
+    event.preventDefault();
+    onChangeFavStatus(publicacion.id, isFav);
+  };
+
   return (
     <Col className="my-4 text-center">
       <Link to={`/detail/${publicacion.id}`} className="nav-link">
         <Card className="h-100">
+          <Row>
+            <Col style={{ textAlign: 'right', margin: '6px' }}>
+              {user && (
+                <img
+                  src={isFav ? iconoFavorito : iconoNoFavorito}
+                  onClick={handleFavClick}
+                />
+              )}
+            </Col>
+          </Row>
+
           <Card.Img
             style={cardImageStyle}
             variant="top"
@@ -46,12 +78,7 @@ export default function PubCard({ publicacion, mode, onEditClick }) {
                   <FontAwesomeIcon icon={faEdit} />
                 </Button>
 
-                <Button
-                  variant="light"
-                  onClick={() => {
-                    alert('Eliminar');
-                  }}
-                >
+                <Button variant="light" onClick={handleDeleteClick}>
                   <FontAwesomeIcon icon={faTrash} />
                 </Button>
               </Col>

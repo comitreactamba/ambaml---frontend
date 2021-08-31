@@ -4,7 +4,14 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
-export default function PubEditorModal({ show, handleHide, pubId }) {
+import Swal from 'sweetalert2';
+
+export default function PubEditorModal({
+  show,
+  handleHide,
+  pubId,
+  handleListRefresh,
+}) {
   const [categorias, setCategorias] = useState([]);
 
   const [pubTitle, setPubTitle] = useState('');
@@ -95,7 +102,25 @@ export default function PubEditorModal({ show, handleHide, pubId }) {
       method = 'PUT';
     }
 
-    fetch(url, { method, body: formData, credentials: 'include' });
+    fetch(url, { method, body: formData, credentials: 'include' }).then(
+      async (response) => {
+        const data = await response.json();
+
+        if (response.status === 200) {
+          handleListRefresh();
+          handleHide();
+          Swal.fire({
+            text: data.message,
+            icon: 'success',
+          });
+        } else {
+          Swal.fire({
+            text: data.message,
+            icon: 'error',
+          });
+        }
+      }
+    );
   };
 
   return (
